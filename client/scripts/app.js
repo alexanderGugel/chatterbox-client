@@ -8,19 +8,29 @@ app.init = function () {
   $('.username').click(function () {
     app.addFriend($(this).text());
   });
-  $('.submit').click(app.handleSubmit);
-  return false;
+  $('#send').submit(app.handleSubmit);
+  $('#roomSelect').change(function(room){
+    app.currentRoom = $(this).val();
+    app.clearMessages();
+  });
+  app.addRoom('lobby');
+  app.addRoom('l33t');
+  app.addRoom('w00t');
+  app.addRoom('LOLCATZ');
+
+  setInterval(app.fetch.bind(this), 1000);
 };
 
 app.send = function (message) {
+  console.log(message);
   $.ajax({
-    // always use this url
-    url: this.server,
+    url: app.server,
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message sent');
+      app.fetch();
     },
     error: function (data) {
       // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -29,13 +39,20 @@ app.send = function (message) {
   });
 };
 
+app.messages = {};
+
 app.fetch = function () {
   $.ajax({
     // always use this url
-    url: this.server,
+    url: app.server + '?order=-createdAt&roomname=' + app.currentRoom,
     type: 'GET',
     success: function (data) {
-      console.log('chatterbox: Message sent');
+      _.each(data.results.reverse(), function(message){
+        if(!app.messages[message.objectId]){
+          app.messages[message.objectId] = true;
+          app.addMessage(message);
+        }
+      });
     },
     error: function (data) {
       // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -49,10 +66,23 @@ app.clearMessages = function () {
 };
 
 app.addMessage = function (message) {
-  $('#chats').prepend('<li><span class="username" data-username="' + message.username + '">' + message.username + '</span>: ' + message.text + '</li>');
+  console.log(message.text);
+  var $li = $('<li><span class="username"></span>: <span class="text"></span></li>');
+  $li.find('.username').text(message.username);
+  $li.find('.text').text(message.text);
+  if($('#chats').children().length > 20){
+    $('#chats').children().first().remove();
+  }
+  $('#chats').append($li);
 };
 
+app.rooms = {};
+
+app.currentRoom = 'lobby';
+
 app.addRoom = function (room) {
+  app.currentRoom = room;
+  app.rooms[room] = false;
   $('#roomSelect').append('<option value="' + room + '">' + room + '</option>');
 };
 
@@ -62,13 +92,19 @@ app.addFriend = function (username) {
   this.friends[username] = username;
 };
 
-app.handleSubmit = function () {
+app.handleSubmit = function (e) {
+  e.preventDefault();
+  console.log('Submit')
   app.send({
     username: window.location.search.split('username=')[1],
     text: $('#message').val(),
-    roomname: '_I am Bad At Naming Things'
+    roomname: '4chan'
   });
+  $('#message').val('').focus();
 };
 
+$(function () {
+  app.init();
+});
 
 
