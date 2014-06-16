@@ -13,10 +13,11 @@ app.init = function () {
     app.currentRoom = $(this).val();
     app.clearMessages();
   });
-  app.addRoom('lobby');
   app.addRoom('l33t');
   app.addRoom('w00t');
   app.addRoom('LOLCATZ');
+  app.addRoom('lobby');
+  app.addRoom('4chan');
 
   setInterval(app.fetch.bind(this), 1000);
 };
@@ -44,10 +45,11 @@ app.messages = {};
 app.fetch = function () {
   $.ajax({
     // always use this url
-    url: app.server + '?order=-createdAt&roomname=' + app.currentRoom,
+    url: app.server + '?order=-createdAt&where={"roomname":"' + app.currentRoom + '"}',
     type: 'GET',
     success: function (data) {
       _.each(data.results.reverse(), function(message){
+        console.log(data.results)
         if(!app.messages[message.objectId]){
           app.messages[message.objectId] = true;
           app.addMessage(message);
@@ -83,7 +85,10 @@ app.currentRoom = 'lobby';
 app.addRoom = function (room) {
   app.currentRoom = room;
   app.rooms[room] = false;
-  $('#roomSelect').append('<option value="' + room + '">' + room + '</option>');
+
+  $('#roomSelect option').removeAttr('selected');
+
+  $('#roomSelect').append('<option selected="selected" value="' + room + '">' + room + '</option>');
 };
 
 app.friends = {};
@@ -98,7 +103,7 @@ app.handleSubmit = function (e) {
   app.send({
     username: window.location.search.split('username=')[1],
     text: $('#message').val(),
-    roomname: '4chan'
+    roomname: app.currentRoom
   });
   $('#message').val('').focus();
 };
