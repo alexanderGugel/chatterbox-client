@@ -81,8 +81,12 @@ app.clearMessages = function () {
 
 app.addMessage = function (message) {
   console.log(message.text);
+
   var $li = $('<li><span data-username="' + message.username + '" class="username"></span>: <span class="text"></span></li>');
   $li.find('.username').text(message.username);
+  if (app.friends[message.username] !== undefined) {
+    $li.find('.username').css('font-weight', 'bold');
+  }
   $li.find('.text').text(message.text);
   if($('#chats').children().length > 20){
     $('#chats').children().first().remove();
