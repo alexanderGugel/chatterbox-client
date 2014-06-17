@@ -74,6 +74,10 @@ form input[type=text] {
     background-color: #ddd;
 }
 
+.username {
+    cursor: pointer;
+}
+
 .spinner {
     float: right;
     height: 46px;

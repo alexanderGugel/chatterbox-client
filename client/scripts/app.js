@@ -5,7 +5,7 @@ var app = {};
 app.server = 'https://api.parse.com/1/classes/chatterbox';
 
 app.init = function () {
-  $('.username').click(function () {
+  $('#chats').on('click', '.username', function (e) {
     app.addFriend($(this).text());
   });
   $('#send').submit(app.handleSubmit);
@@ -17,8 +17,21 @@ app.init = function () {
   app.addRoom('w00t');
   app.addRoom('LOLCATZ');
   app.addRoom('lobby');
-  app.addRoom('4chan');
-
+  // app.addRoom('4chan');
+  $.ajax({
+    // always use this url
+    url: app.server + '?order=-createdAt',
+    type: 'GET',
+    success: function (data) {
+      _.each(data.results.reverse(), function(message){
+        app.addRoom(message.roomname)
+      });
+    },
+    error: function (data) {
+      // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+      console.error('chatterbox: Failed to send message');
+    }
+  });
   setInterval(app.fetch.bind(this), 1000);
 };
 
@@ -49,7 +62,6 @@ app.fetch = function () {
     type: 'GET',
     success: function (data) {
       _.each(data.results.reverse(), function(message){
-        console.log(data.results)
         if(!app.messages[message.objectId]){
           app.messages[message.objectId] = true;
           app.addMessage(message);
@@ -69,7 +81,7 @@ app.clearMessages = function () {
 
 app.addMessage = function (message) {
   console.log(message.text);
-  var $li = $('<li><span class="username"></span>: <span class="text"></span></li>');
+  var $li = $('<li><span data-username="' + message.username + '" class="username"></span>: <span class="text"></span></li>');
   $li.find('.username').text(message.username);
   $li.find('.text').text(message.text);
   if($('#chats').children().length > 20){
@@ -83,18 +95,21 @@ app.rooms = {};
 app.currentRoom = 'lobby';
 
 app.addRoom = function (room) {
+
   app.currentRoom = room;
-  app.rooms[room] = false;
-
-  $('#roomSelect option').removeAttr('selected');
-
-  $('#roomSelect').append('<option selected="selected" value="' + room + '">' + room + '</option>');
+  if (!app.rooms[room]) {
+    console.log(room)
+    app.rooms[room] = true;
+    $('#roomSelect option').removeAttr('selected');
+    $('#roomSelect').append('<option selected="selected" value="' + room + '">' + room + '</option>');
+  }
 };
 
 app.friends = {};
 
 app.addFriend = function (username) {
   this.friends[username] = username;
+  $('#chats').find('span[data-username="' + username + '"]').css('font-weight', 'bold')
 };
 
 app.handleSubmit = function (e) {
