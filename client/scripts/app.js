@@ -5,7 +5,7 @@ var app = {};
 app.server = 'https://api.parse.com/1/classes/chatterbox';
 
 app.init = function () {
-  $('#chats').on('click', '.username', function (e) {
+  $('#chats').on('click', '.username', function () {
     app.addFriend($(this).text());
   });
   $('#send').submit(app.handleSubmit);
@@ -17,7 +17,8 @@ app.init = function () {
   app.addRoom('w00t');
   app.addRoom('LOLCATZ');
   app.addRoom('lobby');
-  // app.addRoom('4chan');
+  app.addRoom('4chan');
+
   $.ajax({
     // always use this url
     url: app.server + '?order=-createdAt',
@@ -36,7 +37,6 @@ app.init = function () {
 };
 
 app.send = function (message) {
-  console.log(message);
   $.ajax({
     url: app.server,
     type: 'POST',
@@ -58,7 +58,7 @@ app.messages = {};
 app.fetch = function () {
   $.ajax({
     // always use this url
-    url: app.server + '?order=-createdAt&where={"roomname":"' + app.currentRoom + '"}',
+    url: app.server + '?' + 'order=-createdAt&where=' + JSON.stringify({roomname: app.currentRoom}),
     type: 'GET',
     success: function (data) {
       _.each(data.results.reverse(), function(message){
@@ -80,12 +80,10 @@ app.clearMessages = function () {
 };
 
 app.addMessage = function (message) {
-  console.log(message.text);
-
-  var $li = $('<li><span data-username="' + message.username + '" class="username"></span>: <span class="text"></span></li>');
+  var $li = $('<li><span class="username"></span> <span data-username="' + encodeURI(message.username) + '" class="text"></span><span class="time" data-livestamp="' + message.createdAt + '"></span></li>');
   $li.find('.username').text(message.username);
   if (app.friends[message.username] !== undefined) {
-    $li.find('.username').css('font-weight', 'bold');
+    $li.find('.text').addClass('friend');
   }
   $li.find('.text').text(message.text);
   if($('#chats').children().length > 20){
@@ -102,7 +100,7 @@ app.addRoom = function (room) {
 
   app.currentRoom = room;
   if (!app.rooms[room]) {
-    console.log(room)
+    console.log(room);
     app.rooms[room] = true;
     $('#roomSelect option').removeAttr('selected');
     $('#roomSelect').append('<option selected="selected" value="' + room + '">' + room + '</option>');
@@ -113,12 +111,11 @@ app.friends = {};
 
 app.addFriend = function (username) {
   this.friends[username] = username;
-  $('#chats').find('span[data-username="' + username + '"]').css('font-weight', 'bold')
+  $('#chats').find('span[data-username="' + encodeURI(username) + '"]').toggleClass('friend');
 };
 
 app.handleSubmit = function (e) {
   e.preventDefault();
-  console.log('Submit')
   app.send({
     username: window.location.search.split('username=')[1],
     text: $('#message').val(),
