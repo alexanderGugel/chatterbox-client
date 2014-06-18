@@ -45,15 +45,18 @@ li .username {
   margin-bottom: 5px;
 }
 
-li:hover {
-  background: #eee;
-}
-
 li .time {
   color: #ccc;
   display: block;
   float: right;
   font-size: 13px;
+}
+
+li {
+  -webkit-animation: highlight 2s;
+          animation: highlight 2s;
+  list-style: none;
+  min-height: 100px;
 }
 
 /**
@@ -62,26 +65,20 @@ li .time {
  * https://github.com/alexanderGugel/Odin/blob/master/static/css/main.css
  */
 
-li {
-  -webkit-animation: highlight 2s;
-          animation: highlight 2s;
-  list-style: none;
-}
-
 @keyframes highlight {
   from {
-    background: #b9d3ed;
+    border: 1px solid #b9d3ed;
   }
   to {
-    background: #fff;
+    border: 1px solid #ccc;
   }
 }
 
 @-webkit-keyframes highlight {
   from {
-    background: #b9d3ed;
+    border: 1px solid #b9d3ed;
   }
   to {
-    background: #fff;
+    border: 1px solid #ccc;
   }
 }
