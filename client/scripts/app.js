@@ -128,19 +128,47 @@
 
 
 var Message = Backbone.Model.extend({
-  initialize: function () {
-    console.log(this.attributes);
+  idAttribute: 'objectId'
+});
+
+var MessageView = Backbone.View.extend({
+  tagName: 'li',
+  template: _.template('<span class="username"><%= _.escape(username) %></span>' +
+    '<%= _.escape(text) %><span class="time" data-livestamp="<%= createdAt %>"></span>'),
+  render: function () {
+    console.log(this.model.attributes);
+    this.$el.html(this.template(this.model.attributes));
+    return this;
+  }
+});
+
+var MessageForm = Backbone.View.extend({
+  events: {
+    'submit': 'submit'
+  },
+
+  submit: function (e) {
+    e.preventDefault();
+    this.collection.create({
+      username: window.location.search.split('username=')[1],
+      roomname: this.collection.currentRoomname,
+      text: this.$el.find('#message').val()
+    }, {
+      wait: true
+    });
+
+    console.log('submit');
   }
 });
 
 var Room = Backbone.Collection.extend({
   model: Message,
-  currentRoomname: '4chan',
+  currentRoomname: 'lobby',
   url: function () {
     return 'https://api.parse.com/1/classes/chatterbox';
   },
   parse: function (resp) {
-    return resp.results;
+    return resp.results.reverse();
   },
   initialize: function () {
     setInterval(function () {
@@ -156,4 +184,25 @@ var Room = Backbone.Collection.extend({
   }
 });
 
-new Room();
+var RoomView = Backbone.View.extend({
+  initialize: function () {
+    this.collection.on('add', function (model) {
+      var view = new MessageView({
+        model: model
+      });
+      this.$el.prepend(view.render().el);
+    }.bind(this));
+  }
+});
+
+$(function () {
+  var room = new Room();
+  var roomView = new RoomView({
+    collection: room,
+    el: $('#chats')
+  });
+  var messageForm = new MessageForm({
+    collection: room,
+    el: $('#send')
+  });
+});
