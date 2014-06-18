@@ -136,7 +136,6 @@ var MessageView = Backbone.View.extend({
   template: _.template('<span class="username"><%= _.escape(username) %></span>' +
     '<%= _.escape(text) %><span class="time" data-livestamp="<%= createdAt %>"></span>'),
   render: function () {
-    console.log(this.model.attributes);
     this.$el.html(this.template(this.model.attributes));
     return this;
   }
@@ -156,17 +155,13 @@ var MessageForm = Backbone.View.extend({
     }, {
       wait: true
     });
-
-    console.log('submit');
   }
 });
 
 var Room = Backbone.Collection.extend({
   model: Message,
   currentRoomname: 'lobby',
-  url: function () {
-    return 'https://api.parse.com/1/classes/chatterbox';
-  },
+  url: 'https://api.parse.com/1/classes/chatterbox',
   parse: function (resp) {
     return resp.results.reverse();
   },
