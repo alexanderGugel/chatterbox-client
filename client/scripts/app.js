@@ -158,6 +158,29 @@ var MessageForm = Backbone.View.extend({
   }
 });
 
+var SelectRoom = Backbone.View.extend({
+  events: {
+    'change': 'changeRoom'
+  },
+  changeRoom: function () {
+    this.collection.reset();
+    this.collection.currentRoomname = this.$el.val();
+  },
+  addRoom: function (roomname) {
+    this.$el.find('option').removeAttr('selected');
+    var $option = $('<option>');
+    $option.attr('selected', 'selected');
+    $option.attr('value', roomname);
+    $option.text(roomname);
+    this.$el.append($option);
+  },
+  initialize: function () {
+    this.addRoom('default');
+    this.addRoom('lobby');
+    this.addRoom('4chan');
+  }
+});
+
 var Room = Backbone.Collection.extend({
   model: Message,
   currentRoomname: 'lobby',
@@ -187,6 +210,9 @@ var RoomView = Backbone.View.extend({
       });
       this.$el.prepend(view.render().el);
     }.bind(this));
+    this.collection.on('reset', function () {
+      this.$el.empty();
+    }.bind(this));
   }
 });
 
@@ -200,4 +226,8 @@ $(function () {
     collection: room,
     el: $('form')
   });
+  var selectRoom = new SelectRoom({
+    collection: room,
+    el: $('select')
+  })
 });
