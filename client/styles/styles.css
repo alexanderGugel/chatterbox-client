@@ -14,7 +14,13 @@ html, button, input, select, textarea,
 
 body {
   background: #eee;
-  padding: 1em;
+  padding: 0.2em;
+}
+
+@media only screen and (min-width: 480px) {
+  body {
+    padding: 1em;
+  }
 }
 
 h1 {
@@ -23,11 +29,17 @@ h1 {
   letter-spacing: -3px;
 }
 
+input {
+  display: block;
+  width: 100%;
+  margin-bottom: 3px;
+}
+
 ul {
   padding: 0;
 }
 
-li, form {
+li {
   background: #fff;
   border: 1px solid #ccc;
   box-shadow: #ccc 0px 2px 2px 0px;
