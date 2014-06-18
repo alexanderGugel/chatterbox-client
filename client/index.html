@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>chatterbox</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
     <link rel="stylesheet" href="styles/styles.css">
 
     <!-- dependencies -->
@@ -16,15 +17,14 @@
     <script src="scripts/app.js"></script>
   </head>
   <body>
-    <div id="main">
+    <main>
       <h1>chatterbox</h1>
-      <form id="send" class="submit">
-        <input type="text" id="message">
-        <input type="submit" value="Send!">
+      <form class="pure-form pure-g">
+        <input class="pure-u-4-5" type="text" placeholder="Your message">
+        <button class="pure-u-1-5 pure-button pure-button-primary">Submit!</button>
       </form>
-      <select id="roomSelect"></select>
-      <ul id="chats"></ul>
-      <!-- Your HTML goes here! -->
-    </div>
+      <select></select>
+      <ul></ul>
+    </main>
   </body>
 </htmli

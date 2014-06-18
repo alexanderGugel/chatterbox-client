@@ -133,7 +133,7 @@ var Message = Backbone.Model.extend({
 
 var MessageView = Backbone.View.extend({
   tagName: 'li',
-  template: _.template('<span class="username"><%= _.escape(username) %></span>' +
+  template: _.template('<span class="username"><%= _.escape(username) %></span> ' +
     '<%= _.escape(text) %><span class="time" data-livestamp="<%= createdAt %>"></span>'),
   render: function () {
     this.$el.html(this.template(this.model.attributes));
@@ -145,16 +145,16 @@ var MessageForm = Backbone.View.extend({
   events: {
     'submit': 'submit'
   },
-
   submit: function (e) {
     e.preventDefault();
     this.collection.create({
       username: window.location.search.split('username=')[1],
       roomname: this.collection.currentRoomname,
-      text: this.$el.find('#message').val()
+      text: this.$el.find('input').val()
     }, {
       wait: true
     });
+    this.$el.find('input').val('').focus();
   }
 });
 
@@ -194,10 +194,10 @@ $(function () {
   var room = new Room();
   var roomView = new RoomView({
     collection: room,
-    el: $('#chats')
+    el: $('ul')
   });
   var messageForm = new MessageForm({
     collection: room,
-    el: $('#send')
+    el: $('form')
   });
 });

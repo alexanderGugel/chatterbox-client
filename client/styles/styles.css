@@ -1,113 +1,71 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400);
+
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"],
+.pure-g-r [class *= "pure-u"] {
+  font: 300 16px/1.7 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 body {
-    background: #eee;
-    text-align: center;
-    padding: 0 25px;
-    font-family: Helvetica, arial, sans-serif;
+  background: #eee;
+  padding: 1em;
 }
 
-#main {
-    width: 500px;
-    margin: auto;
-    text-align: left;
-    background: white;
-    padding: 50px 60px;
-    border: solid #0BDAA8;
-    border-width: 0 1px 1px 1px;
+ul {
+  padding: 0;
 }
 
-#main h1 {
-    margin-top: 0;
-    font-size: 35px;
-    margin-bottom: 5px;
-    padding: 5px;
+li, form {
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: #ccc 0px 2px 2px 0px;
+  padding: 1em;
+  margin: 0.5em 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 
-#main h1 span {
-    font-style:italic;
+li .username {
+  font-weight: bold;
+  display: block;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 5px;
 }
 
-#main ul {
-    padding-left: 20px;
-    list-style: none;
-    padding: 0;
-}
 
-#main .error {
-    border: 1px solid red;
-    background: #FDEFF0;
-    padding: 20px;
-}
-
-#main .success {
-    margin-top: 25px;
-}
-
-#main .success code {
-    font-size: 12px;
-    color: green;
-    line-height: 13px;
-}
-
-form {
-    padding: 20px;
-    padding-left: 0;
-    margin-bottom: 20px;
-}
-
-form input[type=text] {
-    margin-right: 10px;
-    width: 70%;
-    font-size: 12px;
-    padding: 5px;
-}
-
-.chat {
-    padding: 5px;
-    margin-bottom: 5px;
-    background-color: #eee;
-}
-
-.chat .username {
-    font-weight: 800;
-}
-
-.chat:hover {
-    background-color: #ddd;
-}
-
-.username {
-    cursor: pointer;
-    background: #0066cc;
-    color: #eee;
-    padding: 4px;
-    margin: 2px;
-    border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-}
-
-.friend {
-    font-weight: bold;
-}
+/**
+ * Animation in order to highlight new tweets
+ * Used this at a previous project:
+ * https://github.com/alexanderGugel/Odin/blob/master/static/css/main.css
+ */
 
 li {
-    word-wrap: break-word;
-    margin-bottom: 15px;
+  -webkit-animation: highlight 5s;
+          animation: highlight 5s;
+  list-style: none;
 }
 
-.spinner {
-    float: right;
-    height: 46px;
-    margin-bottom: 5px;
+@keyframes highlight {
+  from {
+    background: #b9d3ed;
+  }
+  to {
+    background: #fff;
+  }
 }
 
-.spinner img {
-    padding: 10px;
-}
-
-.time {
-    color: #ddd;
-    font-style: italic;
-    font-weight: 300;
-    float: right;
+@-webkit-keyframes highlight {
+  from {
+    background: #b9d3ed;
+  }
+  to {
+    background: #fff;
+  }
 }
