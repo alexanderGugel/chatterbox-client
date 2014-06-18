@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,800,600);
 
 *, *:before, *:after {
   -webkit-box-sizing: border-box;
@@ -17,6 +17,12 @@ body {
   padding: 1em;
 }
 
+h1 {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -3px;
+}
+
 ul {
   padding: 0;
 }
@@ -33,12 +39,22 @@ li, form {
 }
 
 li .username {
-  font-weight: bold;
+  font-weight: 600;
   display: block;
   border-bottom: 1px solid #eee;
   margin-bottom: 5px;
 }
 
+li:hover {
+  background: #eee;
+}
+
+li .time {
+  color: #ccc;
+  display: block;
+  float: right;
+  font-size: 13px;
+}
 
 /**
  * Animation in order to highlight new tweets
@@ -47,8 +63,8 @@ li .username {
  */
 
 li {
-  -webkit-animation: highlight 5s;
-          animation: highlight 5s;
+  -webkit-animation: highlight 2s;
+          animation: highlight 2s;
   list-style: none;
 }
 
